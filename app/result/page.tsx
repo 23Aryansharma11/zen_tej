@@ -1,11 +1,12 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { motion } from "motion/react";
 
-const ResultPage = () => {
+// ✅ Separate component that actually uses useSearchParams()
+const ResultContent = () => {
   const router = useRouter();
   const params = useSearchParams();
 
@@ -74,6 +75,15 @@ const ResultPage = () => {
         </div>
       </motion.div>
     </section>
+  );
+};
+
+// ✅ Wrap with Suspense at top-level export
+const ResultPage = () => {
+  return (
+    <Suspense fallback={<div className="text-center p-20">Loading...</div>}>
+      <ResultContent />
+    </Suspense>
   );
 };
 
