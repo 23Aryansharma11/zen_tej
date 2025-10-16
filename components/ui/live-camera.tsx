@@ -86,7 +86,7 @@ export function LiveCameraSection({
   };
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center bg-white rounded-xl border p-6 space-y-4">
+    <div className="w-full h-full flex flex-col items-center justify-center space-y-4">
       <div className="flex gap-4 mb-4">
         <Button
           variant={mode === "photo" ? "default" : "outline"}

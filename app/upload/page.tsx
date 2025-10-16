@@ -35,7 +35,7 @@ const Page = () => {
       </div>
 
       {/* Live camera section */}
-      <div className="w-full h-full">
+      <div className="w-full h-full flex flex-col items-center justify-center bg-white rounded-xl border p-6 space-y-4">
         <LiveCameraSection onCapture={handleCameraCapture} />
         {cameraFile && (
           <p className="text-sm text-gray-600">
