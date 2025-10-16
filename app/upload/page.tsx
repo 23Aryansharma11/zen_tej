@@ -1,27 +1,24 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { FileUpload } from "@/components/ui/file-upload";
 import { LiveCameraSection } from "@/components/ui/live-camera";
 import { Button } from "@/components/ui/button";
 
 const Page = () => {
+  const router = useRouter();
   const [files, setFiles] = useState<File[]>([]);
   const [cameraFile, setCameraFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [responseMsg, setResponseMsg] = useState<string | null>(null);
 
-  // ✅ Handle file uploads
   const handleFileUpload = (myFiles: File[]) => {
-    // Rename uploaded images for backend consistency
     const renamed = myFiles.map(
       (f, i) => new File([f], `upload_${i + 1}.jpg`, { type: f.type })
     );
     setFiles(renamed);
-    console.log("📂 Uploaded Files:", renamed);
   };
 
-  // ✅ Handle camera captures
   const handleCameraCapture = (file: File) => {
     const renamed = new File(
       [file],
@@ -29,14 +26,11 @@ const Page = () => {
       { type: file.type }
     );
     setCameraFile(renamed);
-    console.log("🎥 Captured from camera:", renamed);
   };
 
-  // ✅ Submit both image(s) + camera capture
   const handleSubmit = async () => {
     if (!cameraFile || files.length === 0) return;
     setIsSubmitting(true);
-    setResponseMsg(null);
 
     try {
       const formData = new FormData();
@@ -49,12 +43,15 @@ const Page = () => {
       });
 
       if (!res.ok) throw new Error("Failed to submit data");
-
       const data = await res.json();
-      setResponseMsg(`✅ Success: ${JSON.stringify(data)}`);
-    } catch (err: any) {
+
+      // ✅ Navigate to result page and pass data as query params
+      router.push(
+        `/result?liveliness=${data.liveliness_score}&matching=${data.matching_score}&auth=${data.authenticity_label}`
+      );
+    } catch (err) {
       console.error("❌ Error:", err);
-      setResponseMsg("❌ Submission failed. Check console or backend logs.");
+      alert("Submission failed. Check backend logs.");
     } finally {
       setIsSubmitting(false);
     }
@@ -72,32 +69,18 @@ const Page = () => {
       </h2>
 
       <div className="flex flex-col md:flex-row items-center justify-between w-full gap-8">
-        {/* File upload section */}
         <div className="w-full flex flex-col items-center justify-center bg-white rounded-xl border p-6 space-y-6">
           <FileUpload onChange={handleFileUpload} />
           <p className="text-gray-500 text-base">
             Accepted formats: JPEG, PNG. Max file size: 5MB per image.
           </p>
-          {files.length > 0 && (
-            <div className="w-full max-w-sm text-sm text-gray-600">
-              <p>✅ Uploaded: {files.map((f) => f.name).join(", ")}</p>
-            </div>
-          )}
         </div>
 
-        {/* Live camera section */}
         <div className="w-full h-full flex flex-col items-center justify-center bg-white rounded-xl border p-6 space-y-4">
           <LiveCameraSection onCapture={handleCameraCapture} />
-          {cameraFile && (
-            <p className="text-sm text-gray-600">
-              ✅ Captured: {cameraFile.name} (
-              {(cameraFile.size / 1024 / 1024).toFixed(2)} MB)
-            </p>
-          )}
         </div>
       </div>
 
-      {/* Submit button */}
       <div className="mt-8">
         <Button
           onClick={handleSubmit}
@@ -109,13 +92,6 @@ const Page = () => {
           {isSubmitting ? "Submitting..." : "Submit for Verification"}
         </Button>
       </div>
-
-      {/* Response feedback */}
-      {responseMsg && (
-        <p className="mt-6 text-sm text-gray-700 max-w-xl text-center">
-          {responseMsg}
-        </p>
-      )}
     </section>
   );
 };
