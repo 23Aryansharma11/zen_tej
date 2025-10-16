@@ -44,7 +44,7 @@ const TeamSection = () => {
       </p>
 
       <div className="flex-1 w-full h-full">
-        <AnimatedDetails Details={team} autoplay={true} />
+        <AnimatedDetails Details={team} />
       </div>
     </section>
   );
