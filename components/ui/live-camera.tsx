@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { motion } from "motion/react";
+import { Camera, Video } from "lucide-react";
 
 export function LiveCameraSection({
   onCapture,
@@ -17,7 +18,6 @@ export function LiveCameraSection({
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
 
-  // ✅ Initialize camera
   useEffect(() => {
     const initCamera = async () => {
       try {
@@ -92,13 +92,13 @@ export function LiveCameraSection({
           variant={mode === "photo" ? "default" : "outline"}
           onClick={() => setMode("photo")}
         >
-          📸 Photo
+          <Camera /> Photo
         </Button>
         <Button
           variant={mode === "video" ? "default" : "outline"}
           onClick={() => setMode("video")}
         >
-          🎥 Video
+          <Video /> Video
         </Button>
       </div>
 
