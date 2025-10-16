@@ -10,11 +10,11 @@ export default function Navbar() {
   // ✅ Centralized, easily customizable nav items
   const navLinks = [
     { label: "Home", to: "/" },
-    { label: "Challenge", to: "#challenge" },
-    { label: "Solution", to: "#solution" },
-    { label: "Architecture", to: "#architecture" },
+    { label: "Challenge", to: "/#challenge" },
+    { label: "Solution", to: "/#solution" },
+    { label: "Architecture", to: "/#architecture" },
     { label: "Demo", to: "/upload" },
-    { label: "Team", to: "#team" },
+    { label: "Team", to: "/#team" },
   ];
 
   return (
