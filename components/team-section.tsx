@@ -11,23 +11,23 @@ const TeamSection = () => {
     {
       name: "Hardik Sharma - D25092",
       src: "/ph.jpeg",
-      designation: "Backend Enginner",
+      designation: "",
       quote:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis quasi laboriosam, mollitia, minima optio praesentium adipisci in quis fuga ducimus esse fugit. Dolores, qui eveniet voluptate dolorem fugit doloribus placeat!",
+        "d25092@students.iitmandi.ac.in",
     },
     {
       name: "Aashish Negi - DD25011",
       src: "/person1.png",
-      designation: "AI Enginner",
+      designation: "",
       quote:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis quasi laboriosam, mollitia, minima optio praesentium adipisci in quis fuga ducimus esse fugit. Dolores, qui eveniet voluptate dolorem fugit doloribus placeat!",
+        "dd25011@students.iitmandi.ac.in",
     },
     {
       name: "Sushant Sharma - S25064",
       src: "/sui.jpg",
-      designation: "Backbone of UIT",
+      designation: "",
       quote:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis quasi laboriosam, mollitia, minima optio praesentium adipisci in quis fuga ducimus esse fugit. Dolores, qui eveniet voluptate dolorem fugit doloribus placeat!",
+        "s25064@students.iitmandi.ac.in",
     },
   ];
   return (
