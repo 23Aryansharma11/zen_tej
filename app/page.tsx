@@ -1,3 +1,4 @@
+import Architecture from "@/components/architecture";
 import HeroSection from "@/components/hero-section";
 import TeamSection from "@/components/team-section";
 import { Compare } from "@/components/ui/compare";
@@ -8,6 +9,7 @@ export default function Home() {
     <section className="relative  overflow-hidden">
       <HeroSection />
       <TeamSection />
+      <Architecture />
     </section>
   );
 }

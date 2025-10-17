@@ -9,12 +9,15 @@ const Architecture = () => {
       <h2 className="text-4xl md:text-6xl font-extrabold text-gray-900 mb-4">
         Architecture
       </h2>
-      <p className="text-lg md:text-xl text-gray-600 max-w-2xl">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Libero dicta
-        mollitia
-      </p>
+      <p className="text-lg md:text-xl text-gray-600 max-w-2xl"></p>
 
-      <div className="flex-1 w-full h-full"></div>
+      <div className="flex-1 w-full h-full">
+        <img
+          src="/arch.png"
+          alt=""
+          className="w-[90%] mx-auto border rounded-xl h-full"
+        />
+      </div>
     </section>
   );
 };
