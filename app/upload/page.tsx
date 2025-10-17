@@ -144,6 +144,7 @@ const Page = () => {
           src="https://d977616d1fcfc833ae.gradio.live/"
           width="850"
           height="1000"
+          allow="camera; microphone"
         ></iframe>
       </div>
     </section>
