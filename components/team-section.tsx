@@ -10,24 +10,21 @@ const TeamSection = () => {
   const team: Detail[] = [
     {
       name: "Hardik Sharma - D25092",
-      src: "/ph.jpeg",
+      src: "/hardik.png",
       designation: "",
-      quote:
-        "d25092@students.iitmandi.ac.in",
+      quote: "d25092@students.iitmandi.ac.in",
     },
     {
       name: "Aashish Negi - DD25011",
-      src: "/person1.png",
+      src: "/aashish2.png",
       designation: "",
-      quote:
-        "dd25011@students.iitmandi.ac.in",
+      quote: "dd25011@students.iitmandi.ac.in",
     },
     {
       name: "Sushant Sharma - S25064",
       src: "/sui.jpg",
       designation: "",
-      quote:
-        "s25064@students.iitmandi.ac.in",
+      quote: "s25064@students.iitmandi.ac.in",
     },
   ];
   return (
@@ -45,6 +42,20 @@ const TeamSection = () => {
 
       <div className="flex-1 w-full h-full">
         <AnimatedDetails Details={team} />
+      </div>
+      <h2 className="text-4xl md:text-6xl font-extrabold text-gray-900 mb-4">
+        Under the guidance of
+      </h2>
+      <div className="flex flex-col gap-2 items-center justify-center">
+        <img
+          src={"/ph.jpeg"}
+          alt={"Dr. Praful hambarde"}
+          width={500}
+          height={500}
+          draggable={false}
+          className="h-full w-full rounded-3xl object-cover object-center"
+        />
+        <p className="text-2xl md:text-4xl font-semibold text-gray-900 mb-4">Dr. Praful hambarde</p>
       </div>
     </section>
   );
