@@ -38,7 +38,7 @@ const HeroSection = () => {
 
         <div className="flex flex-wrap gap-4 mt-6">
           <Link
-            href="https://e4e13d29c805de1586.gradio.live/"
+            href="/upload"
             className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-all duration-300 shadow-sm hover:shadow-md"
           >
             View Demo
