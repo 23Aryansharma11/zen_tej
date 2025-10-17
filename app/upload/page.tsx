@@ -89,6 +89,8 @@ const Page = () => {
 
       const report = result.data?.[2] ?? "";
 
+      console.log(report);
+
       // Extract match score
       const matchScoreMatch = report.match(
         /Match Score \(Cosine\).*?`([\d.]+)`/
@@ -137,37 +139,12 @@ const Page = () => {
         Upload your images or capture live footage to verify authenticity.
       </h2>
 
-      <div className="flex flex-col md:flex-row items-center justify-between w-full gap-8">
-        <div className="w-full flex flex-col items-center justify-center bg-white rounded-xl border p-6 space-y-6">
-          <FileUpload onChange={handleFileUpload} />
-          <p className="text-gray-500 text-base">
-            Accepted formats: JPEG, PNG. Max file size: 5MB per image.
-          </p>
-          {files.length > 0 && (
-            <p className="text-green-600 font-semibold">
-              ✅ {files.length} file(s) ready
-            </p>
-          )}
-        </div>
-
-        <div className="w-full h-full flex flex-col items-center justify-center bg-white rounded-xl border p-6 space-y-4">
-          <LiveCameraSection onCapture={handleCameraCapture} />
-          {cameraFile && (
-            <p className="text-green-600 font-semibold">✅ Camera captured</p>
-          )}
-        </div>
-      </div>
-
-      <div className="mt-8">
-        <Button
-          onClick={handleSubmit}
-          disabled={!canSubmit || isSubmitting}
-          className={`px-8 py-4 text-lg font-semibold ${
-            canSubmit ? "bg-blue-600 hover:bg-blue-700" : "bg-gray-400"
-          }`}
-        >
-          {isSubmitting ? "Submitting..." : "Submit for Verification"}
-        </Button>
+      <div className="flex flex-col md:flex-row items-center justify-center w-full gap-8">
+        <iframe
+          src="https://d977616d1fcfc833ae.gradio.live/"
+          width="850"
+          height="1000"
+        ></iframe>
       </div>
     </section>
   );
