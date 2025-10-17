@@ -2,6 +2,8 @@
 
 import { motion } from "framer-motion";
 import { Compare } from "@/components/ui/compare";
+import { PointerHighlight } from "@/components/ui/pointer-highlight";
+
 import Link from "next/link";
 
 const HeroSection = () => {
@@ -21,9 +23,11 @@ const HeroSection = () => {
         <p className="text-lg md:text-xl text-gray-700 max-w-xl">
           Secure Identities in the Age of AI
           <br />
-          <span className="text-blue-600 font-semibold">
-            Detect. Verify. Trust.
-          </span>
+          <PointerHighlight>
+            <span className="text-blue-600 font-semibold px-4 py-2">
+              Detect. Verify. Trust.
+            </span>
+          </PointerHighlight>
         </p>
 
         <p className="text-gray-500 max-w-md leading-relaxed">
