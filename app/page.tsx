@@ -1,7 +1,7 @@
 import Architecture from "@/components/architecture";
 import HeroSection from "@/components/hero-section";
+import InfoSection from "@/components/info-section";
 import TeamSection from "@/components/team-section";
-import { Compare } from "@/components/ui/compare";
 import Link from "next/link";
 
 export default function Home() {
@@ -10,6 +10,7 @@ export default function Home() {
       <HeroSection />
       <TeamSection />
       <Architecture />
+      <InfoSection />
     </section>
   );
 }
