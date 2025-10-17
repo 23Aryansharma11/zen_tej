@@ -45,12 +45,12 @@ const Page = () => {
       if (!res.ok) throw new Error("Failed to submit data");
       const data = await res.json();
 
-      // ✅ Navigate to result page and pass data as query params
+      // Navigate to result page and pass data as query params
       router.push(
         `/result?liveliness=${data.liveliness_score}&matching=${data.matching_score}&auth=${data.authenticity_label}`
       );
     } catch (err) {
-      console.error("❌ Error:", err);
+      console.error("Error:", err);
       alert("Submission failed. Check backend logs.");
     } finally {
       setIsSubmitting(false);
