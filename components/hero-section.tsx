@@ -59,7 +59,7 @@ const HeroSection = () => {
         <div className="shadow-2xl rounded-2xl overflow-hidden">
           <Compare
             firstImage="/person1.png"
-            secondImage="/result.png"
+            secondImage="/res.png"
             firstImageClassName="object-cover object-center"
             secondImageClassname="object-cover object-center"
             className="h-[250px] w-[220px] md:h-[480px] md:w-[480px]"
