@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@gradio/client": "^2.0.0-dev.0",
     "@radix-ui/react-slot": "^1.2.3",
     "@tabler/icons-react": "^3.35.0",
     "@tsparticles/engine": "^3.9.1",
