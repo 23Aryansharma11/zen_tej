@@ -1,11 +1,12 @@
 "use client";
 
+import { Client } from "@gradio/client";
+
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { FileUpload } from "@/components/ui/file-upload";
 import { LiveCameraSection } from "@/components/ui/live-camera";
 import { Button } from "@/components/ui/button";
-import { Client } from "@gradio/client";
 
 const Page = () => {
   const router = useRouter();
@@ -35,7 +36,6 @@ const Page = () => {
   };
 
   const handleSubmit = async () => {
-    // Check if we have at least files or camera
     if (files.length === 0 && !cameraFile) {
       alert("Please upload images or capture from camera before submitting.");
       return;
@@ -46,18 +46,13 @@ const Page = () => {
     try {
       console.log("🔗 Connecting to Gradio server:", GRADIO_URL);
 
-      // Convert files to blobs for Gradio
-      let uploadedImageBlob: Blob;
-      let capturedMediaBlob: Blob;
+      // Prepare blobs safely
+      const uploadedImageBlob =
+        files.length > 0
+          ? new Blob([await files[0].arrayBuffer()], { type: files[0].type })
+          : null;
 
-      // Get the first uploaded file
-      if (files.length > 0) {
-        uploadedImageBlob = new Blob([await files[0].arrayBuffer()], {
-          type: files[0].type,
-        });
-      }
-
-      // Get camera capture or use second uploaded file
+      let capturedMediaBlob: Blob | null = null;
       if (cameraFile) {
         capturedMediaBlob = new Blob([await cameraFile.arrayBuffer()], {
           type: cameraFile.type,
@@ -67,8 +62,13 @@ const Page = () => {
           type: files[1].type,
         });
       } else {
-        // Use same file for both if only one uploaded
-        capturedMediaBlob = uploadedImageBlob!;
+        capturedMediaBlob = uploadedImageBlob;
+      }
+
+      if (!uploadedImageBlob || !capturedMediaBlob) {
+        alert("Files missing required for prediction.");
+        setIsSubmitting(false);
+        return;
       }
 
       // Connect to Gradio client
@@ -76,22 +76,41 @@ const Page = () => {
 
       console.log("🤖 Making prediction with model: mobilenetv3");
 
-      // Make prediction
       const result = await client.predict("/predict", {
-        model_choice: "mobilenetv3",
-        img_A_pil: uploadedImageBlob!,
+        model_choice: "edgenext",
+        img_A_pil: uploadedImageBlob,
         img_B_pil: capturedMediaBlob,
       });
 
       console.log("✅ Prediction complete!");
       console.log("📊 Result data:", result.data);
 
-      // Parse the result
-      const liveliness_score = result.data[0] || 0;
-      const matching_score = result.data[1] || 0;
-      const authenticity_label = result.data[2] || "unknown";
+      console.log(result);
 
-      // Navigate to result page with data
+      const report = result.data?.[2] ?? "";
+
+      // Extract match score
+      const matchScoreMatch = report.match(
+        /Match Score \(Cosine\).*?`([\d.]+)`/
+      );
+      const matching_score = matchScoreMatch
+        ? parseFloat(matchScoreMatch[1])
+        : 0;
+
+      // Determine authenticity label keyword
+      let authenticity_label = "Unknown";
+      if (report.includes("REJECT IDENTITY")) {
+        authenticity_label = "Rejected";
+      } else if (report.includes("MATCH")) {
+        authenticity_label = "Authentic";
+      }
+
+      // Liveliness score extraction (optional, example parsing FAKE Confidence Score)
+      const fakeScoreMatch = report.match(/FAKE Confidence Score.*?`([\d.]+)`/);
+      const liveliness_score = fakeScoreMatch
+        ? parseFloat(fakeScoreMatch[1])
+        : 0;
+
       router.push(
         `/result?liveliness=${liveliness_score}&matching=${matching_score}&auth=${authenticity_label}`
       );
