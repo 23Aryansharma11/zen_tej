@@ -13,7 +13,7 @@ export default function Navbar() {
     { label: "Challenge", to: "/#challenge" },
     { label: "Solution", to: "/#solution" },
     { label: "Architecture", to: "/#architecture" },
-    { label: "Demo", to: "/upload" },
+    { label: "Demo", to: "https://e4e13d29c805de1586.gradio.live/" },
     { label: "Team", to: "/#team" },
   ];
 
