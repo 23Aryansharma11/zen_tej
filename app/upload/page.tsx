@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { FileUpload } from "@/components/ui/file-upload";
 import { LiveCameraSection } from "@/components/ui/live-camera";
 import { Button } from "@/components/ui/button";
+import { Client } from "@gradio/client";
 
 const Page = () => {
   const router = useRouter();
@@ -12,11 +13,15 @@ const Page = () => {
   const [cameraFile, setCameraFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Gradio server URL
+  const GRADIO_URL = "https://e4e13d29c805de1586.gradio.live/";
+
   const handleFileUpload = (myFiles: File[]) => {
     const renamed = myFiles.map(
       (f, i) => new File([f], `upload_${i + 1}.jpg`, { type: f.type })
     );
     setFiles(renamed);
+    console.log(`✅ ${renamed.length} file(s) uploaded`);
   };
 
   const handleCameraCapture = (file: File) => {
@@ -26,38 +31,83 @@ const Page = () => {
       { type: file.type }
     );
     setCameraFile(renamed);
+    console.log(`✅ Camera captured: ${renamed.name}`);
   };
 
   const handleSubmit = async () => {
-    if (!cameraFile || files.length === 0) return;
+    // Check if we have at least files or camera
+    if (files.length === 0 && !cameraFile) {
+      alert("Please upload images or capture from camera before submitting.");
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
-      const formData = new FormData();
-      files.forEach((f) => formData.append("uploads", f));
-      formData.append("capture", cameraFile);
+      console.log("🔗 Connecting to Gradio server:", GRADIO_URL);
 
-      const res = await fetch("http://localhost:3000/api/predict", {
-        method: "POST",
-        body: formData,
+      // Convert files to blobs for Gradio
+      let uploadedImageBlob: Blob;
+      let capturedMediaBlob: Blob;
+
+      // Get the first uploaded file
+      if (files.length > 0) {
+        uploadedImageBlob = new Blob([await files[0].arrayBuffer()], {
+          type: files[0].type,
+        });
+      }
+
+      // Get camera capture or use second uploaded file
+      if (cameraFile) {
+        capturedMediaBlob = new Blob([await cameraFile.arrayBuffer()], {
+          type: cameraFile.type,
+        });
+      } else if (files.length > 1) {
+        capturedMediaBlob = new Blob([await files[1].arrayBuffer()], {
+          type: files[1].type,
+        });
+      } else {
+        // Use same file for both if only one uploaded
+        capturedMediaBlob = uploadedImageBlob!;
+      }
+
+      // Connect to Gradio client
+      const client = await Client.connect(GRADIO_URL);
+
+      console.log("🤖 Making prediction with model: mobilenetv3");
+
+      // Make prediction
+      const result = await client.predict("/predict", {
+        model_choice: "mobilenetv3",
+        img_A_pil: uploadedImageBlob!,
+        img_B_pil: capturedMediaBlob,
       });
 
-      if (!res.ok) throw new Error("Failed to submit data");
-      const data = await res.json();
+      console.log("✅ Prediction complete!");
+      console.log("📊 Result data:", result.data);
 
-      // Navigate to result page and pass data as query params
+      // Parse the result
+      const liveliness_score = result.data[0] || 0;
+      const matching_score = result.data[1] || 0;
+      const authenticity_label = result.data[2] || "unknown";
+
+      // Navigate to result page with data
       router.push(
-        `/result?liveliness=${data.liveliness_score}&matching=${data.matching_score}&auth=${data.authenticity_label}`
+        `/result?liveliness=${liveliness_score}&matching=${matching_score}&auth=${authenticity_label}`
       );
     } catch (err) {
-      console.error("Error:", err);
-      alert("Submission failed. Check backend logs.");
+      console.error("❌ Error:", err);
+      alert(
+        err instanceof Error
+          ? err.message
+          : "Submission failed. Check console for details."
+      );
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const canSubmit = files.length > 0 && cameraFile !== null;
+  const canSubmit = files.length > 0 || cameraFile !== null;
 
   return (
     <section className="relative min-h-screen px-6 md:px-16 py-24 md:py-12 gap-8 overflow-hidden flex flex-col items-center justify-center">
@@ -74,10 +124,18 @@ const Page = () => {
           <p className="text-gray-500 text-base">
             Accepted formats: JPEG, PNG. Max file size: 5MB per image.
           </p>
+          {files.length > 0 && (
+            <p className="text-green-600 font-semibold">
+              ✅ {files.length} file(s) ready
+            </p>
+          )}
         </div>
 
         <div className="w-full h-full flex flex-col items-center justify-center bg-white rounded-xl border p-6 space-y-4">
           <LiveCameraSection onCapture={handleCameraCapture} />
+          {cameraFile && (
+            <p className="text-green-600 font-semibold">✅ Camera captured</p>
+          )}
         </div>
       </div>
 
